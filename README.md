@@ -3,7 +3,8 @@ This project aims to predict if the news on any week by CNN is real or fake.
 The source information is pulled from the weekly transcipts published on cnn's website.( https://transcripts.cnn.com/ )
 
 ## Code Review
-The initial model that inspired this project can be found at https://data-flair.training/blogs/advanced-python-project-detecting-fake-news/.
+The initial model that inspired this project can be found at https://data-flair.training/blogs/advanced-python-project-detecting-fake-news/ 
+The data set "new.csv" to train the initial model can be downloaded through the tutorial link.
 
 # Whats different?
 What makes this repository unique is that we scrape our own real time data to predict on our model.

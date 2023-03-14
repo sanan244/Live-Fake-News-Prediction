@@ -1,6 +1,7 @@
 # The following lines are a sample output of the model ran on Monday, March 13th.
 # Because its the first day of the week there is only news for this Monday as CNN updates the transcripts weekly.
 # The final dataset printed out will have predictions with the respective source of news data.
+# This is only a sample not a final success scenario.
 
 reading data...
 Splitting dataset...

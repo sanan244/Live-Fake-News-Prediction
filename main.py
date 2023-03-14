@@ -6,9 +6,18 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
+from scrape import *
+# Permanently changes the pandas settings
+pd.set_option('display.max_rows', 37)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', None)
+
+base_url = 'https://transcripts.cnn.com/'
+
 print("reading data...")
 #Read the data
-df=pd.read_csv('news.csv')
+df = pd.read_csv('news.csv')
 
 #Get shape and head
 df.shape
@@ -34,7 +43,7 @@ tfidf_train=tfidf_vectorizer.fit_transform(x_train)
 tfidf_test=tfidf_vectorizer.transform(x_test)
 #print("---Transformed test set:\n",tfidf_test)
 
-print("Initializing pasive aggresive classifier...")
+print("Initializing passive aggresive classifier...")
 #DataFlair - Initialize a PassiveAggressiveClassifier
 pac=PassiveAggressiveClassifier(max_iter=50)
 pac.fit(tfidf_train,y_train)
@@ -48,3 +57,37 @@ print(f'Accuracy: {round(score*100,2)}%')
 
 #DataFlair - Build confusion matrix
 confusion_matrix(y_test,y_pred, labels=['FAKE','REAL'])
+
+print("\nGetting links...")
+#get links
+links = get_links(base_url)
+
+print("Scraping links...")
+#traverse and scrape each link
+content = []
+for link in links:
+    html = urllib.request.urlopen(link).read()
+    text = text_from_html(html)
+    #print(text)
+    content.append(text)
+
+#parse text and create dataframe
+print("Parsing text and creating dataframe...")
+dataframe = pd.DataFrame(content)
+dataframe.columns = ['text']
+print(dataframe['text'])
+
+# transforming new data
+print("Transforming new data...")
+cnn_data = tfidf_vectorizer.transform(dataframe['text'])
+#print("CNN data",cnn_data)
+
+# predicting on trained model
+print("Calculating final prediction...")
+final_prediction = pac.predict(cnn_data)
+print(len(final_prediction), "\n",final_prediction)
+
+#updating dataframe with new predictions
+print("updating dataframe...")
+dataframe.insert(0, "New predictions", final_prediction)
+print(dataframe)

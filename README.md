@@ -8,5 +8,9 @@ The data set "new.csv" to train the initial model can be downloaded through the 
 
 # Whats different?
 What makes this repository unique is that we scrape our own real time data to predict on our model.
-In order to do this I had to accurately access links within the source website, then access links within that source, and compile all of the weeks 
-transcipts into a single dataset. Then I needed to run the data through the predictor and fine tune the model until results were sufficient.
+In order to do this I had to :
+1. accurately access links within the source website, then access links within that source
+2. Preprocess all this data into a finalized dataset
+3. Test our already trained model on our real world data
+4. Finally, Verify and validate our results!
+

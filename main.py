@@ -7,11 +7,11 @@ from sklearn.linear_model import PassiveAggressiveClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 from scrape import *
-# Permanently changes the pandas settings
-pd.set_option('display.max_rows', 37)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', None)
+# changes the pandas print settings
+pd.set_option('display.max_rows', 100000)
+pd.set_option('display.max_columns', 10000)
+pd.set_option('display.width', 10000)
+pd.set_option('display.max_colwidth', 170)
 
 base_url = 'https://transcripts.cnn.com/'
 
@@ -63,23 +63,24 @@ print("\nGetting links...")
 links = get_links(base_url)
 
 print("Scraping links...")
-#traverse and scrape each link
+#traverse and scrape each link, and search each link for more links(collect all data)
 content = []
 for link in links:
     html = urllib.request.urlopen(link).read()
     text = text_from_html(html)
-    #print(text)
+    # print(text)
     content.append(text)
+    #print(len(content))
 
 #parse text and create dataframe
 print("Parsing text and creating dataframe...")
-dataframe = pd.DataFrame(content)
-dataframe.columns = ['text']
-print(dataframe['text'])
+dataframe = pd.DataFrame(columns=['New Predictions', 'Source'])
+dataframe['Source'] = content
+print(dataframe)
 
 # transforming new data
 print("Transforming new data...")
-cnn_data = tfidf_vectorizer.transform(dataframe['text'])
+cnn_data = tfidf_vectorizer.transform(dataframe['Source'])
 #print("CNN data",cnn_data)
 
 # predicting on trained model
@@ -89,5 +90,5 @@ print(len(final_prediction), "\n",final_prediction)
 
 #updating dataframe with new predictions
 print("updating dataframe...")
-dataframe.insert(0, "New predictions", final_prediction)
+dataframe['New Predictions'] = final_prediction
 print(dataframe)
